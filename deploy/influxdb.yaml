@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+        - name: influxdb
+          image: 'influxdb:1.1.0'
+          ports:
+            - containerPort: 8086
+            - containerPort: 8083
+      nodeSelector:
+        kubernetes.io/hostname: master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+spec:
+  type: NodePort
+  selector:
+    app: influxdb
+  ports:
+    - name: db
+      protocol: TCP
+      port: 8086
+      targetPort: 8086
+      nodePort: 30001
+    - name: web
+      protocol: TCP
+      port: 8083
+      targetPort: 8083
+      nodePort: 30002

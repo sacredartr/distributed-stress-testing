@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jmeter-slave
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jmeter-slave
+  template:
+    metadata:
+      labels:
+        app: jmeter-slave
+    spec:
+      containers:
+        - name: jmeter-slave
+          image: jmeter-slave:5.6.3
+          ports:
+            - containerPort: 1099
+      nodeSelector:
+        kubernetes.io/hostname: slave01
+        kubernetes.io/hostname: slave02

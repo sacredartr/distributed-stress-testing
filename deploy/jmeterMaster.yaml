@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+   name: jmeter-master
+   labels:
+     app: jmeter-master
+spec:
+   containers:
+   - name: jmeter-master
+     image: jmeter-master:5.6.3
+     volumeMounts:
+      - name: jmeterconfig
+        mountPath: /opt/apache-jmeter-5.6.3/bin/jmeter.properties
+        subPath: jmeter.properties
+      - name: testplan
+        mountPath: /opt/testplan.jmx
+        subPath: testplan.jmx
+   nodeSelector:
+        kubernetes.io/hostname: master
+   volumes:
+   - name: jmeterconfig
+     configMap:
+       name: jmeterconfig
+   - name: testplan
+     configMap:
+       name: testplan
